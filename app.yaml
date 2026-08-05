@@ -1,0 +1,156 @@
+# Board: M5Stack ATOM Lite (M5Stack)
+# Definition: definitions/boards/m5stack-atom-lite/manifest.yaml
+
+esphome:
+  name: m5stack-atom
+  friendly_name: M5Stack Atom
+
+esp32:
+  variant: esp32
+  flash_size: 4MB
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption:
+    key: "<SOME_KEY_CREATED_BY_HOME_ASSISTANT>"
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: M5Stack Atom Fallback Hotspot
+    password: "<SOME_PASSWORD>"
+
+captive_portal:
+
+sensor:
+  - platform: homeassistant
+    id: "car1_battery"
+    entity_id: sensor.car1_battery_soc
+  - platform: homeassistant
+    id: "car2_battery"
+    entity_id: sensor.car2_battery_soc
+  - platform: homeassistant
+    id: "house_battery"
+    entity_id: sensor.house_battery_soc
+  
+# Binary Sensors
+binary_sensor:
+  - platform: gpio
+    name: "Main Button"
+    id: mainbutton
+    pin:
+      number: 39
+      inverted: true
+  - platform: homeassistant
+    id: "heatpump_is_on"
+    entity_id: input_boolean.heatpump_is_on
+  - platform: homeassistant
+    id: "battery_is_charging"
+    entity_id: input_boolean.battery_is_charging
+  - platform: homeassistant
+    id: "ohme_is_charging"
+    entity_id: input_boolean.ohme_is_charging
+  - platform: homeassistant
+    id: "doorbell_activity_boolean"
+    entity_id: input_boolean.doorbell_activity_boolean
+
+# Sensors from Home Assistant we need to know about
+text_sensor:
+  - platform: homeassistant
+    id: phone1
+    entity_id: device_tracker.phone1
+  - platform: homeassistant
+    id: phone2
+    entity_id: device_tracker.phone2
+  - platform: homeassistant
+    id: phone3
+    entity_id: device_tracker.phone3
+  - platform: homeassistant
+    id: henry
+    entity_id: vacuum.henry
+  - platform: homeassistant
+    id: ohmestatus
+    entity_id: sensor.ohme_home_pro_status
+        
+# Lights
+light:
+  # LED Matrix as a strip
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2812x
+    pin: 27
+    num_leds: 25
+    id: led_matrix_light
+    color_correct: [30%, 30%, 30%]
+    restore_mode: ALWAYS_OFF
+      
+# Displays
+display:
+  # LED Matrix as an addressable grid
+  - platform: addressable_light
+    id: led_matrix_display
+    addressable_light_id: led_matrix_light
+    width: 5
+    height: 5
+    rotation: 270
+    update_interval: 1000ms
+    lambda: |-
+      // Define available colours
+      Color Red = Color(0xFF0000);
+      Color Green = Color(0x00FF00);
+      Color Blue = Color(0x0000FF);
+      Color White = Color(0xFFFFFF);
+      Color Black = Color(0x000000);
+      Color Orange = Color(0xFFA500);
+      Color Yellow = Color(0xFFFF00);
+      Color Magenta = Color(0xFF00FF);
+      Color Cyan = Color(0x00FFFF);
+      Color Silver = Color(0xC0C0C0);
+
+      // devices
+      if(id(heatpump_is_on).state) {it.line(0, 0, 0, 0, Red);}
+      if(id(battery_is_charging).state) {it.line(1, 0, 1, 0, Magenta);}
+      if(id(ohme_is_charging).state) {
+        it.line(2, 0, 2, 0, Yellow);
+      } else if (id(ohmestatus).state == "plugged_in") {
+        it.line(2, 0, 2, 0, Silver);
+      }
+      if(id(doorbell_activity_boolean).state) {it.line(3, 0, 3, 0, Green);}
+      if(id(henry).state == "cleaning") {it.line(4, 0, 4, 0, Blue);}
+
+      // people
+      if(id(phone1).state == "home") { it.line(0, 1, 0, 1, Orange); }
+      if(id(phone2).state == "home") {it.line(2,1, 2, 1, Orange);}
+      if(id(phone3).state == "home") {it.line(4, 1, 4, 1, Orange);}
+      if(id(phone1).state == "not_home") {it.line(0, 1, 0, 1, Silver);}
+      if(id(phone2).state == "not_home") {it.line(2,1, 2, 1, Silver);}
+      if(id(phone3).state == "not_home") {it.line(4, 1, 4, 1, Silver);}
+
+      // batteries
+      int pixels = (int) round((4*id(car1_battery).get_state())/100);
+      if (pixels >= 0 && pixels <= 4) {
+        it.line(0,2, pixels, 2, Blue);
+      }
+      pixels = (int) round((4*id(car2_battery).get_state())/100);
+      if (pixels >= 0 && pixels <= 4) {
+        it.line(0,3, pixels, 3, Red);
+      }
+      pixels = (int) round((4*id(house_battery).get_state())/100);
+      if (pixels >= 0 && pixels <= 4) {
+        it.line(0,4, pixels, 4, Green);
+      }
+      
+
+      
+      
+
+      
+
+        
