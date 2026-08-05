@@ -1,4 +1,4 @@
-# ESPHome M5stack Atom Matrix
+# ESPHome M5Stack Atom Matrix
 
 Notes for my future self on how to build a tiny Home Assistant dashboard out of a [M5Stack Atom Matrix 1.1](https://docs.m5stack.com/en/core/Atom-Matrix_v1.1), which is a ESP32 development board which has:
 
