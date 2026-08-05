@@ -151,7 +151,7 @@ light:
     restore_mode: ALWAYS_OFF
 ```
 
-Pin 27 corresponds to the GPIO used to control the lights on the [M5Stack pin map](https://docs.m5stack.com/en/core/Atom-Matrix_v1.1#pinmap). The LEDs at full brightness are too bright, so 30% was fine for indoor use. 
+Pin 27 corresponds to the GPIO used to control the lights on the [M5Stack pin map](https://docs.m5stack.com/en/core/Atom-Matrix_v1.1#pinmap). The LEDs at full brightness are too bright, so 30% was fine for indoor use. The `WS2812x` is the type of LED controller on the M5Stack Atom Matrix. 
 
 ## Display
 
