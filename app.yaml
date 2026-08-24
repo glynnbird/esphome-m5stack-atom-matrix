@@ -82,14 +82,14 @@ text_sensor:
 # Lights
 light:
   # LED Matrix as a strip
-  - platform: neopixelbus
-    type: GRB
-    variant: WS2812x
-    pin: 27
+  - platform: esp32_rmt_led_strip
+    channel_colors: GRB
+    pin: GPIO27
     num_leds: 25
+    chipset: ws2812
+    name: led_matrix_light
     id: led_matrix_light
     color_correct: [30%, 30%, 30%]
-    restore_mode: ALWAYS_OFF
       
 # Displays
 display:

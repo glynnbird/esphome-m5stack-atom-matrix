@@ -141,17 +141,17 @@ Borrowing from the [blog post](https://www.thoughtasylum.com/2024/04/27/home-ass
 # Lights
 light:
   # LED Matrix as a strip
-  - platform: neopixelbus
-    type: GRB
-    variant: WS2812x
-    pin: 27
+  - platform: esp32_rmt_led_strip
+    channel_colors: GRB
+    pin: GPIO27
     num_leds: 25
+    chipset: ws2812
+    name: led_matrix_light
     id: led_matrix_light
     color_correct: [30%, 30%, 30%]
-    restore_mode: ALWAYS_OFF
 ```
 
-Pin 27 corresponds to the GPIO used to control the lights on the [M5Stack pin map](https://docs.m5stack.com/en/core/Atom-Matrix_v1.1#pinmap). The LEDs at full brightness are too bright, so 30% was fine for indoor use. The `WS2812x` is the type of LED controller on the M5Stack Atom Matrix. 
+Pin 27 corresponds to the GPIO used to control the lights on the [M5Stack pin map](https://docs.m5stack.com/en/core/Atom-Matrix_v1.1#pinmap). The LEDs at full brightness are too bright, so 30% was fine for indoor use. The `WS2812` is the type of LED controller on the M5Stack Atom Matrix. 
 
 ## Display
 
